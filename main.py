@@ -17,7 +17,7 @@ tablaBD='/subastasViviendas'
 firebase = metodos.conexionBD(urlBD) 
 
 #CARGAMOS DATOS DESDE LA BD
-listaDatosBD = metodos.cargarDatosBD(urlBD, firebase)
+listaDatosBD = metodos.cargarDatosBD(urlBD, firebase, tablaBD)
 
 #SACAMOS LAS KEYS Y LOS VALUES DE LA BD
 if metodos.esListaVacia(listaDatosBD) :
@@ -26,6 +26,7 @@ else:
     listaKeyBD = metodos.listarKeyBD(listaDatosBD)
     listaValuesBD = metodos.listarValuesBD(listaDatosBD, listaKeyBD)
     numElem = len(listaKeyBD)
+    
 
 #CARGAMOS NUEVOS DATOS DE LA WEB DE SUBASTAS BOE
 listadoObjetosSubastas = metodos.buscarNovedasdesWebSubasta(urlSubastaBOE)

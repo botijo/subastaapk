@@ -25,10 +25,10 @@ def conexionBD(ruta):
     print("Conexion a:" + ruta)
     return firebase.FirebaseApplication(ruta, None)
 
-def cargarDatosBD(ruta, firebase):
+def cargarDatosBD(ruta, firebase, tablaDB):
     listaDatosBD=''
     try:  
-        listaDatosBD = firebase.get('/subastas','')            
+        listaDatosBD = firebase.get(tablaDB,'')                  
     except:
         print("No existe datos en la BD")
     return listaDatosBD
@@ -136,7 +136,7 @@ def limpiarSaltosLinea(cadena):
 
 def existeElementoBD(listadoObjetosSubastas, elementoBuscado):            
     for elementoLista in listadoObjetosSubastas:
-        # print("ELEMENTO DE LA LISTA" + str(elementoLista))
+        print("ELEMENTO DE LA LISTA" + str(elementoLista))
         x = str(elementoLista).split(", ")
         y = limpiarIdSubasta(x[2])        
         if y == elementoBuscado:  
@@ -170,6 +170,7 @@ def insertarDatosBD(firebase, tabla, objetoSubasta, listaValuesBD, listaDatosBD)
                 'url' : objetoSubasta.url
             }            
             result = firebase.post(tabla, datoBd) 
+
         else :
             result = "OMITIDO"           
     except:        
