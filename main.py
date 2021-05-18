@@ -48,3 +48,5 @@ for objetoSubasta in listadoObjetosSubastas:
 
 metodos.mostrarEstadisticas(contadorI,contadorO,contadorE)
 print("FIN - SCRIPT - VIVIENDAS BOE - SEVILLA")
+
+metodos.os.system("pause")
