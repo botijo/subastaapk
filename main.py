@@ -26,9 +26,11 @@ else:
     listaKeyBD = metodos.listarKeyBD(listaDatosBD)
     listaValuesBD = metodos.listarValuesBD(listaDatosBD, listaKeyBD)
     numElem = len(listaKeyBD)
+    print(numElem)
     
 
 #CARGAMOS NUEVOS DATOS DE LA WEB DE SUBASTAS BOE
+print("TRABAJANDO...") 
 listadoObjetosSubastas = metodos.buscarNovedasdesWebSubasta(urlSubastaBOE)
 
 contadorI=0

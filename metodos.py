@@ -84,14 +84,33 @@ def buscarBloquesSubastas(soup):
         subasta.id = limpiarIdSubasta(idSubasta.text.strip())
         subasta.lugar = lugar.text.strip()
         subasta.expediente = informacion[0]
-        subasta.estado = informacion[1]
+        subasta.estado = limpiarEstado(informacion[1])
+        subasta.fechaFin = limpiarFecha(informacion[1])
+        subasta.horaFin = limpiarHora(informacion[1])
         subasta.tipoFinca = informacion[2]
         subasta.url = "https://subastas.boe.es" + link[1:]
         listadoObjetosSubastas.append(subasta)
 
     return listadoObjetosSubastas
         
-    
+def limpiarEstado(estadoFecha):
+    partes = estadoFecha.split(" - [Conclusión prevista: ")
+    estado = partes[0].split("Estado: ")
+    #print(estado[1])    
+    return estado[1]
+
+def limpiarFecha(estadoFecha): 
+    partes = estadoFecha.split(" - [Conclusión prevista: ")
+    fecha = partes[1].split(" a las ")
+    #print(fecha[0])
+    return fecha[0]
+
+def limpiarHora(estadoFecha): 
+    partes = estadoFecha.split(" - [Conclusión prevista: ")
+    horaBasura = partes[1].split(" a las ")
+    hora = horaBasura[1].split("]")
+    #print(hora[0])
+    return hora[0]
 
 def numeroPaginasWebSubasta(soup):
     paginas = soup.find(class_='paginar')
@@ -143,7 +162,7 @@ def existeElementoBD(listadoObjetosSubastas, elementoBuscado):
             #print(elementoBuscado + "EXISTE")          
             return True 
 
-    print(elementoBuscado + "NO ENCONTRADO EN LISTA")  
+    #print(elementoBuscado + "NO ENCONTRADO EN LISTA")  
     return False
 
 def esListaVacia(data_structure):
@@ -167,7 +186,9 @@ def insertarDatosBD(firebase, tabla, objetoSubasta, listaValuesBD, listaDatosBD)
                 'idSubasta' : objetoSubasta.id,
                 'lugar' : objetoSubasta.lugar,
                 'tipoFinca' : objetoSubasta.tipoFinca,
-                'url' : objetoSubasta.url
+                'url' : objetoSubasta.url,
+                'fechaFin' : objetoSubasta.fechaFin,
+                'horaFin' : objetoSubasta.horaFin
             }            
             result = firebase.post(tabla, datoBd) 
 

@@ -1,7 +1,11 @@
 class Subasta:
     id = ""
+    subastador = ""
     lugar = ""
     expediente = ""
+    fechaFin = ""
+    horaFin = ""
     estado = ""
     tipoFinca = ""
     url = ""
+    ubicacion = ""
