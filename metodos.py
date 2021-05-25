@@ -83,7 +83,7 @@ def buscarBloquesSubastas(soup):
         subasta = Subasta()
         subasta.id = limpiarIdSubasta(idSubasta.text.strip())
         subasta.lugar = lugar.text.strip()
-        subasta.expediente = informacion[0]
+        subasta.expediente = limpiarExpediente(informacion[0])
         subasta.estado = limpiarEstado(informacion[1])
         subasta.fechaFin = limpiarFecha(informacion[1])
         subasta.horaFin = limpiarHora(informacion[1])
@@ -92,7 +92,11 @@ def buscarBloquesSubastas(soup):
         listadoObjetosSubastas.append(subasta)
 
     return listadoObjetosSubastas
-        
+
+def limpiarExpediente(expediente):
+    partes = expediente.split("Expediente: ")
+    return partes[1]
+
 def limpiarEstado(estadoFecha):
     partes = estadoFecha.split(" - [Conclusión prevista: ")
     estado = partes[0].split("Estado: ")
@@ -138,9 +142,9 @@ def limpiarEspacios(cadena):
 def limpiarCaracteresEspeciales(cadena):
     sinEspacios = cadena.strip()
     reemplazo= sinEspacios.replace("\'","")
-    #print("Paso 1, reemplazo " + reemplazo )
+    #print("Paso 2, reemplazo " + reemplazo )
     sinCaracteresEspeciales = re.split(r'[`\=~!@#$%^&*()_+\[\]{};\'\\:"|<,./<>?]', reemplazo)
-    #print("Paso 2, caracteres especiales " + str(sinCaracteresEspeciales))
+    #print("Paso 3, caracteres especiales " + str(sinCaracteresEspeciales))
 
     if len(sinCaracteresEspeciales) == 1 :
         return sinCaracteresEspeciales[0]
@@ -150,14 +154,15 @@ def limpiarCaracteresEspeciales(cadena):
 
 def limpiarSaltosLinea(cadena):
     sinSaltosLinea = cadena.split('\n')
-    #print("Paso 3, Saltos Linea " + sinSaltosLinea[0])
+    #print("Paso 4, Saltos Linea " + sinSaltosLinea[0])
     return sinSaltosLinea[0]
 
-def existeElementoBD(listadoObjetosSubastas, elementoBuscado):            
+def existeElementoBD(listadoObjetosSubastas, elementoBuscado):   
+    print(elementoBuscado)         
     for elementoLista in listadoObjetosSubastas:
-        print("ELEMENTO DE LA LISTA" + str(elementoLista))
+        #print("ELEMENTO DE LA LISTA" + str(elementoLista))
         x = str(elementoLista).split(", ")
-        y = limpiarIdSubasta(x[2])        
+        y = limpiarIdSubasta(x[4])         
         if y == elementoBuscado:  
             #print(elementoBuscado + "EXISTE")          
             return True 

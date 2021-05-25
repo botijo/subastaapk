@@ -25,8 +25,7 @@ if metodos.esListaVacia(listaDatosBD) :
 else:
     listaKeyBD = metodos.listarKeyBD(listaDatosBD)
     listaValuesBD = metodos.listarValuesBD(listaDatosBD, listaKeyBD)
-    numElem = len(listaKeyBD)
-    print(numElem)
+    numElem = len(listaKeyBD)        
     
 
 #CARGAMOS NUEVOS DATOS DE LA WEB DE SUBASTAS BOE
