@@ -61,16 +61,17 @@ def buscarWebCompleta(host_url):
     return soup
 
 
-def buscarBloquesSubastas(soup):
+def buscarBloquesSubastas(soup, ubicacion):
     listadoObjetosSubastas = []
-    listadoBloquesWebSubastas = soup.find_all(class_='resultado-busqueda')
-    for ing in listadoBloquesWebSubastas:
-        idSubasta = ing.find('h3')
+    listadoBloquesWebSubastas = soup.find_all(class_='resultado-busqueda')    
+    for ing in listadoBloquesWebSubastas:        
+        idSubasta = ing.find('h3')        
         lugar = ing.find('h4')
-        listadoParrafos = ing.find_all('p')
+        listadoParrafos = ing.find_all('p')       
         link = ing.find('a')['href']
         numeroParrafos = len(ing.find_all('p'))    
         contador = 0
+
         if numeroParrafos < 3 :
             contador = 1
         
@@ -78,24 +79,30 @@ def buscarBloquesSubastas(soup):
         for parrafo in listadoParrafos:    
             informacion[contador] = parrafo.text.strip()
             contador = contador + 1   
-            #cadena =  str(contador) + '. '  + parrafo.text.strip()
-                
+            # cadena =  str(contador) + '. '  + parrafo.text.strip()
+            # print(cadena)
         subasta = Subasta()
-        subasta.id = limpiarIdSubasta(idSubasta.text.strip())
-        subasta.lugar = lugar.text.strip()
+        subasta.id = limpiarIdSubasta(idSubasta.text.strip())      
+        subasta.lugar = lugar.text.strip()        
         subasta.expediente = limpiarExpediente(informacion[0])
-        subasta.estado = limpiarEstado(informacion[1])
-        subasta.fechaFin = limpiarFecha(informacion[1])
-        subasta.horaFin = limpiarHora(informacion[1])
-        subasta.tipoFinca = informacion[2]
+        subasta.estado = limpiarEstado(informacion[1])        
+        subasta.fechaFin = limpiarFecha(informacion[1])        
+        subasta.horaFin = limpiarHora(informacion[1])        
+        subasta.tipoFinca = informacion[2]        
         subasta.url = "https://subastas.boe.es" + link[1:]
+        subasta.ubicacion = ubicacion
         listadoObjetosSubastas.append(subasta)
 
     return listadoObjetosSubastas
 
-def limpiarExpediente(expediente):
+def limpiarExpediente(expediente):        
     partes = expediente.split("Expediente: ")
-    return partes[1]
+    if len(partes) == 1:
+        return "No Datos"
+    else:
+        return partes[1]
+    
+    
 
 def limpiarEstado(estadoFecha):
     partes = estadoFecha.split(" - [Conclusión prevista: ")
@@ -122,30 +129,29 @@ def numeroPaginasWebSubasta(soup):
     return npaginas
 
 
-def buscarNovedasdesWebSubasta(host_url):    
+def buscarNovedasdesWebSubasta(host_url,ubicacion):    
     soup = buscarWebCompleta(host_url)
-    listadoObjetosSubastas = buscarBloquesSubastas(soup)
+    listadoObjetosSubastas = buscarBloquesSubastas(soup,ubicacion)    
     return listadoObjetosSubastas
 
 def limpiarIdSubasta(idSubasta):
-    sinEspacios = limpiarEspacios(idSubasta)
-    sinCaracteres = limpiarCaracteresEspeciales(sinEspacios)
+    sinEspacios = limpiarEspacios(idSubasta)    
+    sinCaracteres = limpiarCaracteresEspeciales(sinEspacios)    
     sinSaltos = limpiarSaltosLinea(sinCaracteres)
-    #print("Limpio: " + sinSaltos)
+    # print("Limpio: " + sinSaltos)
     return sinSaltos
     
 def limpiarEspacios(cadena):
     sinEspacios = cadena.split(" ")
-    #print("Paso 1, espacios: " + sinEspacios[1])
+    # print("Paso 1, espacios: " + sinEspacios[1])
     return sinEspacios[1]
 
 def limpiarCaracteresEspeciales(cadena):
     sinEspacios = cadena.strip()
     reemplazo= sinEspacios.replace("\'","")
-    #print("Paso 2, reemplazo " + reemplazo )
+    # print("Paso 2, reemplazo " + reemplazo )
     sinCaracteresEspeciales = re.split(r'[`\=~!@#$%^&*()_+\[\]{};\'\\:"|<,./<>?]', reemplazo)
-    #print("Paso 3, caracteres especiales " + str(sinCaracteresEspeciales))
-
+    # print("Paso 3, caracteres especiales " + str(sinCaracteresEspeciales))
     if len(sinCaracteresEspeciales) == 1 :
         return sinCaracteresEspeciales[0]
     elif len(sinCaracteresEspeciales) > 4:
@@ -154,11 +160,11 @@ def limpiarCaracteresEspeciales(cadena):
 
 def limpiarSaltosLinea(cadena):
     sinSaltosLinea = cadena.split('\n')
-    #print("Paso 4, Saltos Linea " + sinSaltosLinea[0])
+    # print("Paso 4, Saltos Linea " + sinSaltosLinea[0])
     return sinSaltosLinea[0]
 
 def existeElementoBD(listadoObjetosSubastas, elementoBuscado):   
-    print(elementoBuscado)         
+    #print(elementoBuscado)         
     for elementoLista in listadoObjetosSubastas:
         #print("ELEMENTO DE LA LISTA" + str(elementoLista))
         x = str(elementoLista).split(", ")
@@ -193,7 +199,8 @@ def insertarDatosBD(firebase, tabla, objetoSubasta, listaValuesBD, listaDatosBD)
                 'tipoFinca' : objetoSubasta.tipoFinca,
                 'url' : objetoSubasta.url,
                 'fechaFin' : objetoSubasta.fechaFin,
-                'horaFin' : objetoSubasta.horaFin
+                'horaFin' : objetoSubasta.horaFin,
+                'ubicacionCasa' : objetoSubasta.ubicacion
             }            
             result = firebase.post(tabla, datoBd) 
 
