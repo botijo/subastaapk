@@ -1,3 +1,3 @@
 # subastaback
 
-python scraping subastasBOE viviendas sevilla
+python scraping subastasBOE viviendas Huelva y Sevilla
