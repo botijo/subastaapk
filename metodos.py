@@ -79,8 +79,8 @@ def buscarBloquesSubastas(soup, ubicacion):
         for parrafo in listadoParrafos:    
             informacion[contador] = parrafo.text.strip()
             contador = contador + 1   
-            # cadena =  str(contador) + '. '  + parrafo.text.strip()
-            # print(cadena)
+            cadena =  str(contador) + '. '  + parrafo.text.strip()
+            #print(cadena)
         subasta = Subasta()
         subasta.id = limpiarIdSubasta(idSubasta.text.strip())      
         subasta.lugar = lugar.text.strip()        
@@ -92,8 +92,24 @@ def buscarBloquesSubastas(soup, ubicacion):
         subasta.url = "https://subastas.boe.es" + link[1:]
         subasta.ubicacion = ubicacion
         listadoObjetosSubastas.append(subasta)
-
+        #mostrarObjetoSubasta(subasta)    
+    # print("Listado objetos subastas")
+    # print(len(listadoObjetosSubastas))
+    # os.system("pause")
     return listadoObjetosSubastas
+
+
+def mostrarObjetoSubasta(subasta):
+    print("ID -- " + subasta.id)
+    print("LUGAR -- " + subasta.lugar)
+    print("EXPEDIENTE -- " + subasta.expediente)
+    print("FECHA FIN SUBASTA -- " + subasta.fechaFin)
+    print("HORA FIN SUBASTA -- " + subasta.horaFin)
+    print("DATOS VEHICULO -- " + subasta.tipoFinca)
+    print("ENLACE -- " + subasta.url)
+    print("UBICACION -- " + subasta.ubicacion)
+    print("************************************")
+    
 
 def limpiarExpediente(expediente):        
     partes = expediente.split("Expediente: ")
@@ -131,6 +147,8 @@ def numeroPaginasWebSubasta(soup):
 
 def buscarNovedasdesWebSubasta(host_url,ubicacion):    
     soup = buscarWebCompleta(host_url)
+    # if ubicacion == "España" :
+    #    print(soup)
     listadoObjetosSubastas = buscarBloquesSubastas(soup,ubicacion)    
     return listadoObjetosSubastas
 
@@ -218,4 +236,31 @@ def mostrarEstadisticas(contadorI,contadorO,contadorE) :
     print("Se han PRODUCIDO ERRORES en " + str(contadorE) + " registros") 
 
 
-    
+def insertarDatosCochesBD(firebase, tabla, objetoSubasta, listaValuesBD, listaDatosBD):
+    try:   
+        existe = False           
+        if not esListaVacia(listaDatosBD):  
+            existe = existeElementoBD(listaValuesBD, objetoSubasta.id)
+        print("-------------------------")
+        print(objetoSubasta)
+        print(existe)
+        if existe == False:
+            datoBd = {
+                'estado' : objetoSubasta.estado,
+                'expediente' : objetoSubasta.expediente,
+                'idSubasta' : objetoSubasta.id,
+                'lugar' : objetoSubasta.lugar,
+                'tipoFinca' : objetoSubasta.tipoFinca,
+                'url' : objetoSubasta.url,
+                'fechaFin' : objetoSubasta.fechaFin,
+                'horaFin' : objetoSubasta.horaFin,
+                'ubicacionCoche' : objetoSubasta.ubicacion
+            }            
+            result = firebase.post(tabla, datoBd) 
+
+        else :
+            result = "OMITIDO"           
+    except:        
+        result = "ERROR"
+
+    return result

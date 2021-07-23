@@ -22,7 +22,6 @@ firebase = metodos.conexionBD(urlBD)
 
 #CARGAMOS DATOS DESDE LA BD
 listaDatosBD = metodos.cargarDatosBD(urlBD, firebase, tablaBDviviendas)
-listaDatosBDvehiculos = metodos.cargarDatosBD(urlBD, firebase, tablaBDvehiculos)
 
 #SACAMOS LAS KEYS Y LOS VALUES DE LA BD
 if metodos.esListaVacia(listaDatosBD) :
@@ -36,28 +35,66 @@ else:
 #CARGAMOS NUEVOS DATOS DE LA WEB DE SUBASTAS BOE
 print("TRABAJANDO...") 
 
-print("ANALIZANDO...Subastas Sevilla") 
-listadoObjetosSubastas = metodos.buscarNovedasdesWebSubasta(urlSubastaBOEs,"Sevilla")
-print("ANALIZANDO...Subastas Huelva") 
-listadoObjetosSubastas.extend(metodos.buscarNovedasdesWebSubasta(urlSubastaBOEh,"Huelva"))
+# print("ANALIZANDO...Subastas Sevilla") 
+# listadoObjetosSubastas = metodos.buscarNovedasdesWebSubasta(urlSubastaBOEs,"Sevilla")
+# print("ANALIZANDO...Subastas Huelva") 
+# listadoObjetosSubastas.extend(metodos.buscarNovedasdesWebSubasta(urlSubastaBOEh,"Huelva"))
+
+# contadorI=0
+# contadorE=0
+# contadorO=0
+# for objetoSubasta in listadoObjetosSubastas:              
+#     insertado = metodos.insertarDatosBD(firebase, tablaBDviviendas, objetoSubasta, listaValuesBD, listaDatosBD)
+#     if insertado == "ERROR" :
+#         contadorE = contadorE + 1
+#         #print("Error en el proceso en el insert.")        
+#     elif insertado == "OMITIDO" :
+#         contadorO = contadorO + 1
+#         #print("Elemento ya existente, se omite.")        
+#     else :
+#         contadorI = contadorI + 1
+#         #print("Elemento " + str(insertado) + " insertado en BD.")  
+
+# metodos.mostrarEstadisticas(contadorI,contadorO,contadorE)
+# print("FIN - SCRIPT - VIVIENDAS BOE ")
+
+
+listaDatosBDvehiculos = metodos.cargarDatosBD(urlBD, firebase, tablaBDvehiculos)
+#SACAMOS LAS KEYS Y LOS VALUES DE LA BD
+print("++++++++++ BUSCAR COCHES EN LA BASE DE DATOS") 
+if metodos.esListaVacia(listaDatosBDvehiculos) :
+    listaValuesBDoches = []
+else:
+    listaKeyBDCoches = metodos.listarKeyBD(listaDatosBDvehiculos)
+    listaValuesBDoches = metodos.listarValuesBD(listaDatosBDvehiculos, listaKeyBDCoches)
+    numElem = len(listaKeyBDCoches)  
+    
 print("ANALIZANDO... Subastas Coches España")
+print("++++++++++ BUSCAR COCHES EN LA WEB") 
+listadoObjetosSubastasCoches = metodos.buscarNovedasdesWebSubasta(urlSubastasBOEvehiculos,"España")
+
+print("Listado objetos subastas")
+print(len(listadoObjetosSubastasCoches))
 
 contadorI=0
 contadorE=0
 contadorO=0
-for objetoSubasta in listadoObjetosSubastas:              
-    insertado = metodos.insertarDatosBD(firebase, tablaBDviviendas, objetoSubasta, listaValuesBD, listaDatosBD)
+for objetoSubasta in listadoObjetosSubastasCoches:             
+    print(objetoSubasta)
+    print("++++++++++ INSERTAR COCHE") 
+    insertado = metodos.insertarDatosCochesBD(firebase, tablaBDvehiculos, objetoSubasta, listaValuesBDoches, listaDatosBDvehiculos)
     if insertado == "ERROR" :
         contadorE = contadorE + 1
-        #print("Error en el proceso en el insert.")        
+        print("Error en el proceso en el insert.")        
     elif insertado == "OMITIDO" :
         contadorO = contadorO + 1
-        #print("Elemento ya existente, se omite.")        
+        print("Elemento ya existente, se omite.")        
     else :
         contadorI = contadorI + 1
-        #print("Elemento " + str(insertado) + " insertado en BD.")  
+        print("Elemento " + str(insertado) + " insertado en BD.")  
 
 metodos.mostrarEstadisticas(contadorI,contadorO,contadorE)
-print("FIN - SCRIPT - VIVIENDAS BOE ")
+print("FIN - SCRIPT - VEHICULOS BOE ")
+
 
 metodos.os.system("pause")
