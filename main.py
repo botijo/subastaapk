@@ -20,16 +20,16 @@ tablaBDvehiculos='/subastasVehiculos'
 #CONECTAMOS A LA BD
 firebase = metodos.conexionBD(urlBD) 
 
-#CARGAMOS DATOS DESDE LA BD
-listaDatosBD = metodos.cargarDatosBD(urlBD, firebase, tablaBDviviendas)
+# #CARGAMOS DATOS DESDE LA BD
+# listaDatosBD = metodos.cargarDatosBD(urlBD, firebase, tablaBDviviendas)
 
-#SACAMOS LAS KEYS Y LOS VALUES DE LA BD
-if metodos.esListaVacia(listaDatosBD) :
-    listaValuesBD = []
-else:
-    listaKeyBD = metodos.listarKeyBD(listaDatosBD)
-    listaValuesBD = metodos.listarValuesBD(listaDatosBD, listaKeyBD)
-    numElem = len(listaKeyBD)        
+# #SACAMOS LAS KEYS Y LOS VALUES DE LA BD
+# if metodos.esListaVacia(listaDatosBD) :
+#     listaValuesBD = []
+# else:
+#     listaKeyBD = metodos.listarKeyBD(listaDatosBD)
+#     listaValuesBD = metodos.listarValuesBD(listaDatosBD, listaKeyBD)
+#     numElem = len(listaKeyBD)        
     
 
 #CARGAMOS NUEVOS DATOS DE LA WEB DE SUBASTAS BOE
@@ -59,42 +59,42 @@ print("TRABAJANDO...")
 # print("FIN - SCRIPT - VIVIENDAS BOE ")
 
 
-listaDatosBDvehiculos = metodos.cargarDatosBD(urlBD, firebase, tablaBDvehiculos)
-#SACAMOS LAS KEYS Y LOS VALUES DE LA BD
-print("++++++++++ BUSCAR COCHES EN LA BASE DE DATOS") 
-if metodos.esListaVacia(listaDatosBDvehiculos) :
-    listaValuesBDoches = []
-else:
-    listaKeyBDCoches = metodos.listarKeyBD(listaDatosBDvehiculos)
-    listaValuesBDoches = metodos.listarValuesBD(listaDatosBDvehiculos, listaKeyBDCoches)
-    numElem = len(listaKeyBDCoches)  
+# listaDatosBDvehiculos = metodos.cargarDatosBD(urlBD, firebase, tablaBDvehiculos)
+# #SACAMOS LAS KEYS Y LOS VALUES DE LA BD
+# print("++++++++++ BUSCAR COCHES EN LA BASE DE DATOS") 
+# if metodos.esListaVacia(listaDatosBDvehiculos) :
+#     listaValuesBDoches = []
+# else:
+#     listaKeyBDCoches = metodos.listarKeyBD(listaDatosBDvehiculos)
+#     listaValuesBDoches = metodos.listarValuesBD(listaDatosBDvehiculos, listaKeyBDCoches)
+#     numElem = len(listaKeyBDCoches)  
     
-print("ANALIZANDO... Subastas Coches España")
-print("++++++++++ BUSCAR COCHES EN LA WEB") 
-listadoObjetosSubastasCoches = metodos.buscarNovedasdesWebSubasta(urlSubastasBOEvehiculos,"España")
+# print("ANALIZANDO... Subastas Coches España")
+# print("++++++++++ BUSCAR COCHES EN LA WEB") 
+# listadoObjetosSubastasCoches = metodos.buscarNovedasdesWebSubasta(urlSubastasBOEvehiculos,"España")
 
-print("Listado objetos subastas")
-print(len(listadoObjetosSubastasCoches))
+# print("Listado objetos subastas")
+# print(len(listadoObjetosSubastasCoches))
 
-contadorI=0
-contadorE=0
-contadorO=0
-for objetoSubasta in listadoObjetosSubastasCoches:             
-    print(objetoSubasta)
-    print("++++++++++ INSERTAR COCHE") 
-    insertado = metodos.insertarDatosCochesBD(firebase, tablaBDvehiculos, objetoSubasta, listaValuesBDoches, listaDatosBDvehiculos)
-    if insertado == "ERROR" :
-        contadorE = contadorE + 1
-        print("Error en el proceso en el insert.")        
-    elif insertado == "OMITIDO" :
-        contadorO = contadorO + 1
-        print("Elemento ya existente, se omite.")        
-    else :
-        contadorI = contadorI + 1
-        print("Elemento " + str(insertado) + " insertado en BD.")  
+# contadorI=0
+# contadorE=0
+# contadorO=0
+# for objetoSubasta in listadoObjetosSubastasCoches:             
+#     print(objetoSubasta)
+#     print("++++++++++ INSERTAR COCHE") 
+#     insertado = metodos.insertarDatosCochesBD(firebase, tablaBDvehiculos, objetoSubasta, listaValuesBDoches, listaDatosBDvehiculos)
+#     if insertado == "ERROR" :
+#         contadorE = contadorE + 1
+#         print("Error en el proceso en el insert.")        
+#     elif insertado == "OMITIDO" :
+#         contadorO = contadorO + 1
+#         print("Elemento ya existente, se omite.")        
+#     else :
+#         contadorI = contadorI + 1
+#         print("Elemento " + str(insertado) + " insertado en BD.")  
 
-metodos.mostrarEstadisticas(contadorI,contadorO,contadorE)
-print("FIN - SCRIPT - VEHICULOS BOE ")
+# metodos.mostrarEstadisticas(contadorI,contadorO,contadorE)
+# print("FIN - SCRIPT - VEHICULOS BOE ")
 
-
+metodos.eliminarDatosBD(urlBD, firebase, tablaBDviviendas)
 metodos.os.system("pause")

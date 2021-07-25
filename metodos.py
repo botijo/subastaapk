@@ -7,6 +7,7 @@ import time
 import logging
 import requests
 from clases import Subasta
+from datetime import datetime
 import json
 
 try:
@@ -33,11 +34,53 @@ def cargarDatosBD(ruta, firebase, tablaDB):
         print("No existe datos en la BD")
     return listaDatosBD
 
+def eliminarDatosBD(ruta, firebase, tablaDB):
+    print("Proceso eliminado de apuestas concluidas")
+    listaDatosBD = cargarDatosBD(ruta, firebase, tablaDB)
+    print(len(listaDatosBD))
+    os.system("pause")
+    listaKeyBorradoBD = []
+    listaKeyBD = listarKeyBD(listaDatosBD)
+    os.system("pause")
+    numElem = len(listaKeyBD)
+    print("Num elementos BD: ")
+    print(numElem)
+    os.system("pause")
+    print("Llamada a listado borrado BD")
+    listarValuesBorradoBD(listaDatosBD,listaKeyBD)
+
+    return listaKeyBorradoBD
+
+
+def listarValuesBorradoBD(listaDatosBD,listaKeyBD):
+    listaValuesBD = []
+    
+    os.system("pause")
+    fechaHoy = datetime.today().strftime('%Y-%m-%d')
+    print("Filtrar elementos con fecha anterior a: " + fechaHoy)
+    os.system("pause")
+    numElem = len(listaKeyBD)
+    for i in range(numElem):
+        elementoBD = elementoValueBD(listaDatosBD, listaKeyBD[i])
+        print(elementoBD)
+        os.system("pause")
+
+        print(type(elementoBD))
+        os.system("pause")
+
+        ## PROBLEMAS CON EL ACCESO A LOS CAMPOS DE ELEMENTOBD
+        print(len(elementoBD))
+        os.system("pause")
+
+        print(elementoBD[0])
+        os.system("pause")
+    return listaValuesBD
 
 def listarKeyBD(listaDatosBD):
     listaKeyBD = []
     for datoBD in listaDatosBD:
-        listaKeyBD.append(datoBD)
+        listaKeyBD.append(datoBD)   
+    print(len(listaKeyBD)) 
     return listaKeyBD
 
 
