@@ -35,46 +35,59 @@ def cargarDatosBD(ruta, firebase, tablaDB):
     return listaDatosBD
 
 def eliminarDatosBD(ruta, firebase, tablaDB):
+    # Carga los datos de la BD y los marca como borrado, y cambia el estado a finalizado.
     print("Proceso eliminado de apuestas concluidas")
     listaDatosBD = cargarDatosBD(ruta, firebase, tablaDB)
-    print(len(listaDatosBD))
-    os.system("pause")
-    listaKeyBorradoBD = []
+    # print(len(listaDatosBD))
+    # os.system("pause")
+    # listaKeyBorradoBD = []
     listaKeyBD = listarKeyBD(listaDatosBD)
-    os.system("pause")
-    numElem = len(listaKeyBD)
-    print("Num elementos BD: ")
-    print(numElem)
-    os.system("pause")
+    # os.system("pause")
+    # numElem = len(listaKeyBD)
+    # print("Num elementos BD: ")
+    # print(numElem)
+    # os.system("pause")
     print("Llamada a listado borrado BD")
-    listarValuesBorradoBD(listaDatosBD,listaKeyBD)
-
+    listaKeyBorradoBD = listarValuesBorradoBD(listaDatosBD,listaKeyBD)
+    # print(len(listaKeyBorradoBD))
     return listaKeyBorradoBD
 
+# def updateDatosBD(ruta, firebase, tablaDB, tipoUpdate):
+#     firebase.firebaseio
 
 def listarValuesBorradoBD(listaDatosBD,listaKeyBD):
-    listaValuesBD = []
+    listaValuesBorradoBD = []
     
-    os.system("pause")
+    # os.system("pause")
     fechaHoy = datetime.today().strftime('%Y-%m-%d')
     print("Filtrar elementos con fecha anterior a: " + fechaHoy)
-    os.system("pause")
+    # os.system("pause")
     numElem = len(listaKeyBD)
     for i in range(numElem):
-        elementoBD = elementoValueBD(listaDatosBD, listaKeyBD[i])
-        print(elementoBD)
-        os.system("pause")
+        keyElementoBD=listaKeyBD[i]
+        elementoBD = elementoValueBD(listaDatosBD, keyElementoBD)
+        # print(elementoBD)
+        # os.system("pause")
 
-        print(type(elementoBD))
-        os.system("pause")
+        # print(type(elementoBD))
+        # os.system("pause")
 
-        ## PROBLEMAS CON EL ACCESO A LOS CAMPOS DE ELEMENTOBD
-        print(len(elementoBD))
-        os.system("pause")
+        # print(len(elementoBD))
+        # os.system("pause")
 
-        print(elementoBD[0])
-        os.system("pause")
-    return listaValuesBD
+        ## EL ACESO A LOS ATRIBUTOS DEL DICCIONARIO SE 
+        ## SE HACE A TRAVES DE SU KEY.
+        fechaFin = elementoBD['fechaFin']
+        idSubasta = elementoBD['idSubasta']
+        # print(fechaFin)
+        if fechaFin < fechaHoy :
+            # print(fechaFin + '<' + fechaHoy)
+            print('El elemento con ID:' + idSubasta + ' ha terminado su periodo de pujas')
+            # print('Vivienda: ' + elementoBD['tipoFinca'])
+            # print(keyElementoBD)
+            listaValuesBorradoBD.append(keyElementoBD)
+        # os.system("pause")
+    return listaValuesBorradoBD
 
 def listarKeyBD(listaDatosBD):
     listaKeyBD = []

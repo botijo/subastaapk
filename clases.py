@@ -9,3 +9,4 @@ class Subasta:
     tipoFinca = ""
     url = ""
     ubicacion = ""
+    marcadoBorrar = "false"
