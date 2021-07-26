@@ -35,8 +35,7 @@ def cargarDatosBD(ruta, firebase, tablaDB):
     return listaDatosBD
 
 def eliminarDatosBD(ruta, firebase, tablaDB):
-    # Carga los datos de la BD y los marca como borrado, y cambia el estado a finalizado.
-    print("Proceso eliminado de apuestas concluidas")
+    # Carga los datos de la BD y los marca como borrado, y cambia el estado a finalizado.    
     listaDatosBD = cargarDatosBD(ruta, firebase, tablaDB)
     # print(len(listaDatosBD))
     # os.system("pause")
@@ -47,20 +46,23 @@ def eliminarDatosBD(ruta, firebase, tablaDB):
     # print("Num elementos BD: ")
     # print(numElem)
     # os.system("pause")
-    print("Llamada a listado borrado BD")
+    # print("Llamada a listado borrado BD")
     listaKeyBorradoBD = listarValuesBorradoBD(listaDatosBD,listaKeyBD)
-    # print(len(listaKeyBorradoBD))
+    print("Elementos marcados como finalizados " + str(len(listaKeyBorradoBD)))
     return listaKeyBorradoBD
 
 # def updateDatosBD(ruta, firebase, tablaDB, tipoUpdate):
 #     firebase.firebaseio
 
+def fechaActual() :
+    return datetime.today().strftime('%Y-%m-%d')
+
 def listarValuesBorradoBD(listaDatosBD,listaKeyBD):
     listaValuesBorradoBD = []
     
     # os.system("pause")
-    fechaHoy = datetime.today().strftime('%Y-%m-%d')
-    print("Filtrar elementos con fecha anterior a: " + fechaHoy)
+    fechaHoy = fechaActual()
+    # print("Filtrar elementos con fecha anterior a: " + fechaHoy)
     # os.system("pause")
     numElem = len(listaKeyBD)
     for i in range(numElem):
@@ -82,7 +84,7 @@ def listarValuesBorradoBD(listaDatosBD,listaKeyBD):
         # print(fechaFin)
         if fechaFin < fechaHoy :
             # print(fechaFin + '<' + fechaHoy)
-            print('El elemento con ID:' + idSubasta + ' ha terminado su periodo de pujas')
+            # print('El elemento con ID:' + idSubasta + ' ha terminado su periodo de pujas')
             # print('Vivienda: ' + elementoBD['tipoFinca'])
             # print(keyElementoBD)
             listaValuesBorradoBD.append(keyElementoBD)
@@ -93,7 +95,7 @@ def listarKeyBD(listaDatosBD):
     listaKeyBD = []
     for datoBD in listaDatosBD:
         listaKeyBD.append(datoBD)   
-    print(len(listaKeyBD)) 
+    # print(len(listaKeyBD)) 
     return listaKeyBD
 
 
@@ -297,9 +299,9 @@ def insertarDatosCochesBD(firebase, tabla, objetoSubasta, listaValuesBD, listaDa
         existe = False           
         if not esListaVacia(listaDatosBD):  
             existe = existeElementoBD(listaValuesBD, objetoSubasta.id)
-        print("-------------------------")
-        print(objetoSubasta)
-        print(existe)
+        # # print("-------------------------")
+        # # print(objetoSubasta)
+        # # print(existe)
         if existe == False:
             datoBd = {
                 'estado' : objetoSubasta.estado,
