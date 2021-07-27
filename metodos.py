@@ -26,6 +26,9 @@ def conexionBD(ruta):
     print("Conexion a:" + ruta)
     return firebase.FirebaseApplication(ruta, None)
 
+def borrarObjetoBD(firebase,tablaDB,keyObject):
+    return firebase.delete(tablaDB,keyObject)
+
 def cargarDatosBD(ruta, firebase, tablaDB):
     listaDatosBD=''
     try:  
@@ -39,16 +42,17 @@ def eliminarDatosBD(ruta, firebase, tablaDB):
     listaDatosBD = cargarDatosBD(ruta, firebase, tablaDB)
     # print(len(listaDatosBD))
     # os.system("pause")
-    # listaKeyBorradoBD = []
-    listaKeyBD = listarKeyBD(listaDatosBD)
-    # os.system("pause")
-    # numElem = len(listaKeyBD)
-    # print("Num elementos BD: ")
-    # print(numElem)
-    # os.system("pause")
-    # print("Llamada a listado borrado BD")
-    listaKeyBorradoBD = listarValuesBorradoBD(listaDatosBD,listaKeyBD)
-    print("Elementos marcados como finalizados " + str(len(listaKeyBorradoBD)))
+    listaKeyBorradoBD = []
+    if not esListaVacia(listaKeyBorradoBD):  
+        listaKeyBD = listarKeyBD(listaDatosBD)
+        # os.system("pause")
+        # numElem = len(listaKeyBD)
+        # print("Num elementos BD: ")
+        # print(numElem)
+        # os.system("pause")
+        # print("Llamada a listado borrado BD")
+        listaKeyBorradoBD = listarValuesBorradoBD(listaDatosBD,listaKeyBD)
+        print("Elementos marcados como finalizados " + str(len(listaKeyBorradoBD)))
     return listaKeyBorradoBD
 
 # def updateDatosBD(ruta, firebase, tablaDB, tipoUpdate):
@@ -288,10 +292,10 @@ def insertarDatosBD(firebase, tabla, objetoSubasta, listaValuesBD, listaDatosBD)
     return result
 
 def mostrarEstadisticas(contadorI,contadorO,contadorE) :
-    print("ESTADISTICAS:")
-    print("Se han INSERTADO en BD " + str(contadorI) + " registros")      
-    print("Se han OMITIDO en BD " + str(contadorO) + " registros") 
-    print("Se han PRODUCIDO ERRORES en " + str(contadorE) + " registros") 
+    print("     ESTADISTICAS:")
+    print("         Se han INSERTADO en BD " + str(contadorI) + " registros")      
+    print("         Se han OMITIDO en BD " + str(contadorO) + " registros") 
+    print("         Se han PRODUCIDO ERRORES en " + str(contadorE) + " registros") 
 
 
 def insertarDatosCochesBD(firebase, tabla, objetoSubasta, listaValuesBD, listaDatosBD):
