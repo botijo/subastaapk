@@ -7,7 +7,7 @@ import time
 import logging
 import requests
 from clases import Subasta
-from datetime import datetime
+from datetime import date, time, datetime
 import json
 
 try:
@@ -40,15 +40,14 @@ def cargarDatosBD(ruta, firebase, tablaDB):
 def eliminarDatosBD(ruta, firebase, tablaDB):
     # Carga los datos de la BD y los marca como borrado, y cambia el estado a finalizado.    
     listaDatosBD = cargarDatosBD(ruta, firebase, tablaDB)
+    # print("Elementos leidos de la BD: ")
     # print(len(listaDatosBD))
-    # os.system("pause")
     listaKeyBorradoBD = []
-    if not esListaVacia(listaKeyBorradoBD):  
+    if not esListaVacia(listaDatosBD):  
         listaKeyBD = listarKeyBD(listaDatosBD)
         # os.system("pause")
-        # numElem = len(listaKeyBD)
-        # print("Num elementos BD: ")
-        # print(numElem)
+        numElem = len(listaKeyBD)
+        # print("Num elementos BD: " + str(numElem))
         # os.system("pause")
         # print("Llamada a listado borrado BD")
         listaKeyBorradoBD = listarValuesBorradoBD(listaDatosBD,listaKeyBD)
@@ -59,16 +58,31 @@ def eliminarDatosBD(ruta, firebase, tablaDB):
 #     firebase.firebaseio
 
 def fechaActual() :
-    return datetime.today().strftime('%Y-%m-%d')
+    return datetime.now()
+
+def fechaFromStr(fechaStr):
+    try:
+        fecha_dt = datetime.strptime(fechaStr, '%d/%m/%Y')
+    except Exception as e:
+        print('Error de parseo fechaFromStr: ' + str(e))
+    return fecha_dt
+
+def fechaDatetimeToFechaDate(fechaDatetime):
+    return fechaDatetime.date()
+
+
+def fechaToString(fecha):
+    return str(fecha)
+
+def stop():
+    os.system("pause")
 
 def listarValuesBorradoBD(listaDatosBD,listaKeyBD):
     listaValuesBorradoBD = []
-    
-    # os.system("pause")
     fechaHoy = fechaActual()
-    # print("Filtrar elementos con fecha anterior a: " + fechaHoy)
-    # os.system("pause")
+    print("     Filtrar elementos con fecha anterior a: " + fechaToString(fechaHoy))    
     numElem = len(listaKeyBD)
+    # print(numElem)
     for i in range(numElem):
         keyElementoBD=listaKeyBD[i]
         elementoBD = elementoValueBD(listaDatosBD, keyElementoBD)
@@ -83,16 +97,20 @@ def listarValuesBorradoBD(listaDatosBD,listaKeyBD):
 
         ## EL ACESO A LOS ATRIBUTOS DEL DICCIONARIO SE 
         ## SE HACE A TRAVES DE SU KEY.
-        fechaFin = elementoBD['fechaFin']
+        fechaFin = elementoBD['fechaFin']   
+        fechaFinT =  fechaFromStr(fechaFin)
         idSubasta = elementoBD['idSubasta']
-        # print(fechaFin)
-        if fechaFin < fechaHoy :
-            # print(fechaFin + '<' + fechaHoy)
-            # print('El elemento con ID:' + idSubasta + ' ha terminado su periodo de pujas')
+
+        # fechaFinDate = fechaDatetimeToFechaDate(fechaFinT)
+        # fechaHoyDate = fechaDatetimeToFechaDate(fechaHoy)        
+        # print( '     ' + fechaToString(fechaFinDate) + ' < ' + fechaToString(fechaHoyDate))
+        
+        if fechaFinT < fechaHoy :
+            print('     * El elemento con ID:' + str(idSubasta) + ' ha terminado su periodo de pujas')
             # print('Vivienda: ' + elementoBD['tipoFinca'])
             # print(keyElementoBD)
             listaValuesBorradoBD.append(keyElementoBD)
-        # os.system("pause")
+    os.system("pause")
     return listaValuesBorradoBD
 
 def listarKeyBD(listaDatosBD):

@@ -10,13 +10,6 @@ tablaBDviviendas='/subastasViviendas'
 tablaBDvehiculos='/subastasVehiculos'
 
 
-#CONECTAMOS A LA BD
-firebase = metodos.conexionBD(urlBD) 
-print(" ")
-
-
-
-
 
 def busquedaViviendas(urlBD,firebase,tablaBDviviendas) :
     
@@ -82,16 +75,16 @@ def actualizarFinalizadas(urlBD,firebase,tablaBDviviendas,tablaBDvehiculos) :
 
     print("INICIO - SCRIPT - ACTUALIZAR SUBASTAS FINALIZADAS BOE ")
     fechaHoy = metodos.fechaActual()
-    print("     Filtrar elementos con fecha anterior a: " + fechaHoy)
+    print("     Filtrar elementos con fecha anterior a: " + metodos.fechaToString(fechaHoy))
     print(" ")
     listaKeyBorradoBD = []
     
     print("     BUSCANDO...  Subastas viviendas concluidas")
-    listaKeyBorradoBD = metodos.eliminarDatosBD(urlBD, firebase, tablaBDviviendas)    
+    listaKeyBorradoBD = metodos.eliminarDatosBD(urlBD, firebase, tablaBDviviendas)      
     if not metodos.esListaVacia(listaKeyBorradoBD):   
         for keyObject in listaKeyBorradoBD: 
-            print("     * Vivienda eliminada con ID:" + STR(keyObject)) 
-            metodos.borrarObjetoBD(firebase,tablaBDviviendas,keyObject)     
+            print("     * Vivienda eliminada con ID:" + str(keyObject)) 
+            metodos.borrarObjetoBD(firebase,tablaBDviviendas,keyObject) 
     else:
         print("     * Aun no existen subastas de viviendas concluidas")
 
@@ -101,7 +94,7 @@ def actualizarFinalizadas(urlBD,firebase,tablaBDviviendas,tablaBDvehiculos) :
     listaKeyBorradoBD = metodos.eliminarDatosBD(urlBD, firebase, tablaBDvehiculos)
     if not metodos.esListaVacia(listaKeyBorradoBD): 
         for keyObject in listaKeyBorradoBD: 
-            print("     * Vehiculo eliminado con ID:" + STR(keyObject))
+            print("     * Vehiculo eliminado con ID:" + str(keyObject))
             metodos.borrarObjetoBD(firebase,tablaBDvehiculos,keyObject)     
     else:
         print("     * Aun no existen subastas de vehiculos concluidas")
@@ -162,6 +155,9 @@ def busquedaCoches(urlBD,firebase,tablaBDvehiculos) :
     print("FIN - SCRIPT - VEHICULOS BOE ")
     
 
+#CONECTAMOS A LA BD
+firebase = metodos.conexionBD(urlBD) 
+print(" ")
 
 ##INFORMACION RELEVANTE, LAS PESTAÑAS DENTRO DE LA INFORMACION DEL VEHICULO VIENEN INFORMADAS POR LA VARIABLE VER;
 ##SIENDO VER=1 INFORMACION GENERAL Y VER=3 BIENES
@@ -170,4 +166,41 @@ def busquedaCoches(urlBD,firebase,tablaBDvehiculos) :
 busquedaViviendas(urlBD,firebase,tablaBDviviendas)
 busquedaCoches(urlBD, firebase, tablaBDvehiculos)
 actualizarFinalizadas(urlBD,firebase,tablaBDviviendas,tablaBDvehiculos)
+
+# try:
+#     d1 = metodos.fechaActual()
+#     tipode = type(d1)
+#     print(tipode)
+#     print(d1)
+#     metodos.os.system("pause")
+#     d2 = metodos.fechaFromStr('27/05/2021')
+#     d3 = metodos.fechaFromStr('10/06/2021')
+#     tipode = type(d3)
+#     print(tipode)
+#     print(d2)
+#     print(d3)
+#     dd1 = metodos.fechaDatetimeToFechaDate(d1)
+#     dd2 = metodos.fechaDatetimeToFechaDate(d2)
+#     dd3 = metodos.fechaDatetimeToFechaDate(d3)
+#     print(str(d2) + '<' + str(d1))
+#     if d2 < d1 :
+#         print(str(d2) + " es menor.")
+#     else: 
+#         print(str(d2) + " es Mayor.")
+
+#     print(str(d3) + '<' + str(d1))
+#     if d1 < d3 :
+#         print(str(d3) + " es menor.")
+#     else: 
+#         print(str(d2) + " es Mayor.")
+
+#     print(str(dd2) + '<' + str(dd1))
+#     print(str(dd3) + '<' + str(dd1))
+
+
+#     metodos.os.system("pause")
+# except:
+#     print("Error en el main")
+#     metodos.os.system("pause")
+
 metodos.os.system("pause")
