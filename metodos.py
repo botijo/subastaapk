@@ -110,7 +110,7 @@ def listarValuesBorradoBD(listaDatosBD,listaKeyBD):
             # print('Vivienda: ' + elementoBD['tipoFinca'])
             # print(keyElementoBD)
             listaValuesBorradoBD.append(keyElementoBD)
-    os.system("pause")
+    # os.system("pause")
     return listaValuesBorradoBD
 
 def listarKeyBD(listaDatosBD):
